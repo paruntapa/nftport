@@ -1,21 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #00130A; /* deep green/black */
+  --foreground: #e6f7ef; /* soft white-green */
+  --hud-green: #2af7a3;
+  --accent-green: #8cf5cf;
+  --grid-shadow: #000d18;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-voltec);
+  --font-mono: var(--font-orbitron);
+  --font-voltec: var(--font-voltec);
+  --font-atomos: var(--font-atomos);
+  --font-orbitron: var(--font-orbitron);
+  --font-pressstart: var(--font-pressstart);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #04110d;
+    --foreground: #e6f7ef;
   }
 }
 
@@ -23,4 +30,345 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Fonts */
+/* Utility classes mapping to loaded local fonts */
+.font-orbitron { font-family: var(--font-orbitron); }
+.font-voltec { font-family: var(--font-voltec); }
+.font-megaton { font-family: var(--font-megaton); }
+.font-atomos-regular { font-family: var(--font-atomos-regular); }
+.font-atomos { font-family: var(--font-atomos); }
+.font-pressstart { font-family: var(--font-pressstart); }
+
+/* Typography for numbers/prices like "30 SOL" */
+.press-typo {
+  font-family: var(--font-pressstart);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 19.98px;
+  letter-spacing: -0.54px;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* Outline heading effect to mimic outlined display font */
+.outline-heading {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--foreground);
+  text-stroke: 2px var(--foreground);
+}
+
+/* Removed old .bracket-button; brackets are now drawn via Tailwind utility spans in page.tsx */
+
+/* Start button with clipped corner */
+.btn-start {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px 12px 22px;
+  color: #FCFF3E;
+  /* clip opposite corners: top-left and bottom-right */
+  clip-path: polygon(18px 0, 100% 0, 100% 70%, calc(100% - 18px) 100%, 0 100%, 0 18px);
+  border: 2.5px solid #e6f7ef;
+}
+/* Foreground diagonal overlays (sit above the base diagonals) */
+.btn-start .btn-diag-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.btn-start .btn-diag-layer::before,
+.btn-start .btn-diag-layer::after {
+  content: "";
+  position: absolute;
+  background: #e6f7ef;
+}
+.btn-start .btn-diag-layer::before {
+  left: 5;
+  top: 0;
+  width: 18px;
+  height: 2.5px;
+  transform-origin: 0 0;
+  transform: translate(0, 18px) rotate(-45deg);
+}
+.btn-start .btn-diag-layer::after {
+  right: -5px; /* start at (calc(100% - 18px), 100%) */
+  left: 128px;
+  width: 18px;
+  top: 16px;
+  height: 2.5px;
+  transform-origin: 100% 100%;
+  transform: rotate(-38deg);
+}
+/* Draw diagonal connectors for the clipped corners */
+.btn-start::before {
+  content: "";
+  position: absolute;
+  left: -4;
+  top: -4;
+  width: 50px; /* ≈ sqrt(18^2 + 18^2) */
+  height: 4.5px;
+  background: #e6f7ef;
+  transform-origin: 0 0;
+  transform: translate(0, 18px) rotate(-45deg);
+  z-index: 1;
+}
+.btn-start::after {
+  content: "";
+  position: absolute;
+  right: -10px; /* start at (calc(100% - 18px), 100%) */
+  width: 50px; /* approximate length to reach (100%, 70%) */
+  height: 3.5px;
+  background: #e6f7ef;
+  transform-origin: 100% 100%;
+  transform: rotate(-38deg);
+  z-index: 1;
+}
+
+/* HUD overlay text */
+.hud-text {
+  font-weight: 400;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+/* NFT Card Effects - Solana Official Colors */
+.nft-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+}
+
+.nft-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #9945FF,
+    #14F195,
+    #FF6B35,
+    #9945FF,
+    #14F195
+  );
+  background-size: 300% 300%;
+  border-radius: 18px;
+  opacity: 0;
+  animation: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.nft-card:hover::before {
+  opacity: 1;
+  animation: solanaGlow 2s ease-in-out infinite;
+}
+
+@keyframes solanaGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.nft-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(153, 69, 255, 0.2) 0%,
+    rgba(20, 241, 149, 0.1) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.nft-card:hover::after {
+  opacity: 1;
+}
+
+.nft-card:hover {
+  transform: translateY(-16px) scale(1.02);
+  box-shadow: 
+    0 30px 80px rgba(153, 69, 255, 0.3),
+    0 15px 40px rgba(20, 241, 149, 0.2),
+    0 0 60px rgba(255, 107, 53, 0.1);
+}
+
+.nft-image {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(1) contrast(1) saturate(1) hue-rotate(0deg);
+}
+
+.nft-card:hover .nft-image {
+  transform: scale(1.1);
+  filter: brightness(1.3) contrast(1.2) saturate(1.4) hue-rotate(5deg);
+}
+
+.nft-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(153, 69, 255, 0.4) 25%,
+    rgba(20, 241, 149, 0.3) 75%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  backdrop-filter: blur(20px) brightness(1.1);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  animation: overlayPulse 3s ease-in-out infinite;
+}
+
+@keyframes overlayPulse {
+  0%, 100% {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(153, 69, 255, 0.4) 25%,
+      rgba(20, 241, 149, 0.3) 75%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+  50% {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(20, 241, 149, 0.5) 25%,
+      rgba(153, 69, 255, 0.4) 75%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+}
+
+.nft-hover-text {
+  text-shadow: 
+    0 0 20px #14F195,
+    0 0 40px #9945FF,
+    0 0 60px #FF6B35;
+  animation: solanaTextGlow 2s ease-in-out infinite alternate;
+  transform: translateY(0) scale(1);
+  transition: all 0.3s ease;
+}
+
+.nft-card:hover .nft-hover-text {
+  transform: translateY(-8px) scale(1.05);
+}
+
+@keyframes solanaTextGlow {
+  0% {
+    text-shadow: 
+      0 0 20px #14F195,
+      0 0 40px #9945FF,
+      0 0 60px #FF6B35;
+  }
+  25% {
+    text-shadow: 
+      0 0 30px #9945FF,
+      0 0 50px #14F195,
+      0 0 70px #FF6B35;
+  }
+  50% {
+    text-shadow: 
+      0 0 25px #FF6B35,
+      0 0 45px #9945FF,
+      0 0 65px #14F195;
+  }
+  75% {
+    text-shadow: 
+      0 0 35px #14F195,
+      0 0 55px #FF6B35,
+      0 0 75px #9945FF;
+  }
+  100% {
+    text-shadow: 
+      0 0 30px #9945FF,
+      0 0 50px #14F195,
+      0 0 70px #FF6B35;
+  }
+}
+
+.nft-card-footer {
+  transition: all 0.4s ease;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.nft-card:hover .nft-card-footer {
+  background: linear-gradient(
+    90deg,
+    rgba(153, 69, 255, 0.2) 0%,
+    rgba(20, 241, 149, 0.15) 50%,
+    rgba(255, 107, 53, 0.1) 100%
+  );
+  border-top: 1px solid rgba(153, 69, 255, 0.6);
+  box-shadow: 
+    0 -10px 30px rgba(153, 69, 255, 0.2),
+    inset 0 1px 0 rgba(20, 241, 149, 0.3);
+}
+
+/* Enhanced Solana Shine Effect */
+.sol-shine {
+  background: linear-gradient(
+    135deg,
+    #9945FF 0%,
+    #14F195 20%,
+    #FF6B35 40%,
+    #9945FF 60%,
+    #14F195 80%,
+    #FF6B35 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: enhancedSolShine 2.5s ease-in-out infinite;
+  font-weight: 600;
+  filter: drop-shadow(0 0 8px rgba(153, 69, 255, 0.5));
+}
+
+@keyframes enhancedSolShine {
+  0% {
+    background-position: 0% 0%;
+    filter: drop-shadow(0 0 8px rgba(153, 69, 255, 0.5));
+  }
+  25% {
+    background-position: 50% 50%;
+    filter: drop-shadow(0 0 12px rgba(20, 241, 149, 0.6));
+  }
+  50% {
+    background-position: 100% 100%;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+  }
+  75% {
+    background-position: 50% 0%;
+    filter: drop-shadow(0 0 15px rgba(153, 69, 255, 0.7));
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: drop-shadow(0 0 8px rgba(20, 241, 149, 0.5));
+  }
+}
+
+/* Background helpers */
+.bg-horizon {
+  background: linear-gradient(180deg, transparent 0%, transparent 70%, var(--grid-shadow) 85%, var(--grid-shadow) 100%);
 }

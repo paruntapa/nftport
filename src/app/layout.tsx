@@ -1,15 +1,46 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const voltec = localFont({
+  variable: "--font-voltec",
+  display: "swap",
+  src: [
+    { path: "../../public/fonts/Voltec Free Version.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Voltec Free Version.woff", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Voltec Free Version.ttf", weight: "400", style: "normal" },
+    { path: "../../public/fonts/Voltec Free Version.otf", weight: "400", style: "normal" },
+  ],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const atomos = localFont({
+  variable: "--font-atomos",
+  display: "swap",
+  src: [{ path: "../../public/fonts/Atomos-Outline.otf", weight: "400" }],
+});
+
+const atomosRegular = localFont({
+  variable: "--font-atomos-regular",
+  display: "swap",
+  src: [{ path: "../../public/fonts/Atomos-Regular.otf", weight: "400" }],
+});
+
+const megaton = localFont({
+  variable: "--font-megaton",
+  display: "swap",
+  src: [{ path: "../../public/fonts/Megatonh.ttf", weight: "400" }],
+});
+
+const orbitron = localFont({
+  variable: "--font-orbitron",
+  display: "swap",
+  src: [{ path: "../../public/fonts/Orbitron-ExtraBold.ttf", weight: "800", style: "Uppercase" }],
+});
+
+const pressStart = localFont({
+  variable: "--font-pressstart",
+  display: "swap",
+  src: [{ path: "../../public/fonts/PressStart2P-Regular.ttf", weight: "400", style: "normal" }],
 });
 
 export const metadata: Metadata = {
@@ -25,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${voltec.variable} ${megaton.variable} ${atomosRegular.variable} ${atomos.variable} ${orbitron.variable} ${pressStart.variable} antialiased`}
       >
         {children}
       </body>
